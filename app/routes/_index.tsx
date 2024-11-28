@@ -72,18 +72,74 @@ function FeaturedCollection({
 }) {
   if (!collection) return null;
   const image = collection?.image;
+  const img = "https://cdn.shopify.com/s/files/1/0688/1755/1382/collections/banner-2.png?v=1675462488&width=100&height=87&crop=center";
   return (
-    <Link
-      className="featured-collection"
-      to={`/collections/${collection.handle}`}
+    <div 
+      className="featured-collection-image" 
+      style={{
+        position: 'relative', 
+        display: 'grid'
+      }}
     >
       {image && (
-        <div className="featured-collection-image">
-          <Image data={image} sizes="100vw" />
-        </div>
+        <Image
+          data={image}
+          sizes="100vw"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: -1,
+          }}
+        />
       )}
-      <h1>{collection.title}</h1>
-    </Link>
+      <div 
+        style={{
+          position: 'relative', 
+          zIndex: 1,
+          display: 'grid',
+          alignItems: 'end',
+        }}
+      >
+        <div>
+          <h2
+            style={{
+              color: 'white',
+              fontSize: '55px',
+              fontWeight: 'bold',
+              padding: '2rem',
+              fontFamily: 'sans-serif',
+            }}
+          >
+            Great things never came from comfort zones
+          </h2>
+        </div>
+        <div style={{display: 'flex', alignSelf: 'baseline'}}>
+          <button
+            style={{
+              backgroundColor: '#fff',
+              width: '114px',
+              height: '42px',
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: '600',
+            }}
+          >Shop Now</button>
+        </div>
+      </div>
+    </div>
+    // <div style={{
+    //   backgroundImage: `url(${img})`,
+    //   backgroundSize: 'cover',
+    //   backgroundPosition: 'center',
+    //   height: '100vh',
+    //   }}
+    // >
+    //   <div></div>
+    // </div>
   );
 }
 
