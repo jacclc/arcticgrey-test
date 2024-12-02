@@ -1,15 +1,23 @@
 import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link, type MetaFunction} from '@remix-run/react';
-import {Suspense} from 'react';
+import {Suspense, useEffect} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
-
-export const meta: MetaFunction = () => {
-  return [{title: 'Hydrogen | Home'}];
-};
+import {FaAsterisk} from 'react-icons/fa';
+import {useMeasure} from '@uidotdev/usehooks';
+import {motion, animate, useMotionValue} from 'motion/react';
+/*************  ✨ Codeium Command ⭐  *************/
+/**
+ * Defines the meta information for the home page, setting the page title.
+ * This function is used to provide metadata used by the application for SEO purposes.
+ */
+/******  7c434c2d-46bb-4bb0-bcba-ae9b5afd395e  *******/ export const meta: MetaFunction =
+  () => {
+    return [{title: 'Hydrogen | Home'}];
+  };
 
 export async function loader(args: LoaderFunctionArgs) {
   // Start fetching non-critical data without blocking time to first byte
@@ -72,13 +80,13 @@ function FeaturedCollection({
 }) {
   if (!collection) return null;
   const image = collection?.image;
-  const img = "https://cdn.shopify.com/s/files/1/0688/1755/1382/collections/banner-2.png?v=1675462488&width=100&height=87&crop=center";
   return (
-    <div 
-      className="featured-collection-image" 
+    <div
+      className="featured-collection-image"
       style={{
-        position: 'relative', 
-        display: 'grid'
+        position: 'relative',
+        display: 'grid',
+        alignItems: 'end',
       }}
     >
       {image && (
@@ -96,12 +104,11 @@ function FeaturedCollection({
           }}
         />
       )}
-      <div 
+      <div
         style={{
-          position: 'relative', 
+          position: 'relative',
           zIndex: 1,
           display: 'grid',
-          alignItems: 'end',
         }}
       >
         <div>
@@ -127,21 +134,72 @@ function FeaturedCollection({
               fontSize: '14px',
               fontWeight: '600',
             }}
-          >Shop Now</button>
+          >
+            Shop Now
+          </button>
         </div>
+        <BannerAds />
       </div>
     </div>
-    // <div style={{
-    //   backgroundImage: `url(${img})`,
-    //   backgroundSize: 'cover',
-    //   backgroundPosition: 'center',
-    //   height: '100vh',
-    //   }}
-    // >
-    //   <div></div>
-    // </div>
   );
 }
+
+const BannerAds = () => {
+  const [ref, {width}] = useMeasure();
+
+  const xTranslation = useMotionValue(0);
+  const arrayAds = [
+    'High Quality Ingredients',
+    'Independently Certified',
+    'Expert Driven',
+    'Shipped Internationally',
+  ];
+
+  useEffect(() => {
+    const finalPosition = -(width ?? 0) / 2 - arrayAds.length;
+
+    const controls = animate(xTranslation, [0, finalPosition], {
+      ease: 'linear',
+      repeat: Infinity,
+      duration: 50,
+      repeatType: 'loop',
+      repeatDelay: 0,
+    });
+
+    return controls.stop;
+  }, [xTranslation, width, arrayAds.length]);
+
+  return (
+    <div className="carousel-container">
+      <motion.div
+        className="carousel-track"
+        ref={ref}
+        style={{
+          x: xTranslation,
+        }}
+      >
+        {[...arrayAds, ...arrayAds, ...arrayAds, ...arrayAds].map(
+          (detailKey, idx) => {
+            const strWidth =
+              detailKey.length >= 20
+                ? detailKey.length * 9 + 'px'
+                : detailKey.length * 10 + 'px';
+            return (
+              <div
+                className="carousel-card"
+                key={detailKey + idx}
+                style={{minWidth: strWidth}}
+              >
+                <FaAsterisk />
+                <span style={{marginLeft: '10px'}}>{detailKey} </span>
+              </div>
+            );
+          },
+        )}
+      </motion.div>
+    </div>
+  );
+};
 
 function RecommendedProducts({
   products,

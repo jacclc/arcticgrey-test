@@ -153,6 +153,9 @@ button.reset:hover:not(:has(> *)) {
   display: flex;
   height: var(--header-height);
   padding: 0 1rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
   /* position: sticky;
   top: 0;
   z-index: 1; */
@@ -196,7 +199,7 @@ button.reset:hover:not(:has(> *)) {
 .header-ctas {
   align-items: center;
   display: flex;
-  grid-gap: 1rem;
+  grid-gap: 0.4rem; 
   margin-left: auto;
 }
 
@@ -327,6 +330,36 @@ button.reset:hover:not(:has(> *)) {
   align-items: center;
   gap: 1rem;
 }
+
+/*
+* --------------------------------------------------
+* components/Banner
+* --------------------------------------------------
+*/
+.carousel-container {
+  padding-left: 2rem; /* 32px */
+  padding-right: 2rem; /* 32px */
+}
+
+.carousel-track {
+  display: flex;
+  gap: 4px;
+  left: 0;
+  position: absolute;
+  background-color: #000;
+}
+
+.carousel-card {
+  width: 100%;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  min-width: 220px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
 
 /*
 * --------------------------------------------------

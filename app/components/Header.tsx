@@ -7,7 +7,12 @@ import {
 } from '@shopify/hydrogen';
 import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
-import {IoBagOutline} from 'react-icons/io5';
+import {IoBagOutline, IoSearchSharp} from 'react-icons/io5';
+import {FaRegUser} from 'react-icons/fa6';
+import {SlUserFemale} from "react-icons/sl";
+import {LiaUserTieSolid} from "react-icons/lia";
+
+
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -30,7 +35,7 @@ export function Header({
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
-      if (scrollTop > 100) { // adjust this value to your desired scroll threshold
+      if (scrollTop > 80) { // adjust this value to your desired scroll threshold
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -47,16 +52,22 @@ export function Header({
   const headerStyle = isScrolled ? {top: '0px'} : {}; // adjust this value to your header height
   return (
     <header className="header" id="floating-header" style={headerStyle}>
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
-      </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-      />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      <div>
+        <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
+          <strong>{shop.name}</strong>
+        </NavLink>
+      </div>
+      <div>
+        <HeaderMenu
+          menu={menu}
+          viewport="desktop"
+          primaryDomainUrl={header.shop.primaryDomain.url}
+          publicStoreDomain={publicStoreDomain}
+        />
+      </div>
+      <div>
+        <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      </div>
     </header>
   );
 }
@@ -88,6 +99,7 @@ export function HeaderMenu({
           Home
         </NavLink>
       )}
+      <IoSearchSharp style={{alignSelf: 'center'}} />
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
 
@@ -122,16 +134,32 @@ function HeaderCtas({
 }: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
   return (
     <nav className="header-ctas" role="navigation">
-      <HeaderMenuMobileToggle />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        <Suspense fallback="Sign in">
-          <Await resolve={isLoggedIn} errorElement="Sign in">
-            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
-          </Await>
-        </Suspense>
-      </NavLink>
-      <SearchToggle />
-      <CartToggle cart={cart} />
+      <div>
+        <HeaderMenuMobileToggle />
+      </div>
+      <div style={{display: 'contents'}}>
+        <GenderToggle />
+        <div style={{
+            padding: "0.7rem 1.3rem",
+            background: "#000",
+            borderRadius: "8px",
+        }}>
+          <span 
+            style={{
+              color: "#fff",
+              fontSize: "14px",
+              fontFamily: "sans-serif",
+              fontWeight: "600"
+            }}
+          >Take The Quiz</span>
+        </div>
+      </div>
+      <div style={{margin: '0px 15px 0px 30px'}}>
+        <FaRegUser />
+      </div>
+      <div style={{margin: '0px 15px'}}>
+        <CartToggle cart={cart}/>
+      </div>
     </nav>
   );
 }
@@ -144,6 +172,52 @@ function HeaderMenuMobileToggle() {
       onClick={() => open('mobile')}
     >
       <h3>☰</h3>
+    </button>
+  );
+}
+
+function GenderToggle() {
+  const [gender, setGender] = useState<'men' | 'women'>('men');
+
+  return (
+    <button onClick={() => setGender(gender === 'men' ? 'women' : 'men')} 
+      style={{
+        backgroundColor: "#e4e4e4",
+        padding: "0.4rem 0.3rem 0.4rem 0.7rem",
+        borderRadius: "8px",
+        fontFamily: 'system-ui',
+        fontWeight: "600"
+      }}
+    >
+      {gender === 'men' ? (
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <span>Men</span>
+          <div
+            style={{
+              padding: '6px',
+              borderRadius: '20px',
+              backgroundColor: '#fff',
+              marginLeft: '10px'
+            }}
+          >
+            <LiaUserTieSolid fontSize={20} />
+          </div>
+        </div>
+      ) : (
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <span>Women</span>
+          <div
+             style={{
+              padding: '4px',
+              borderRadius: '20px',
+              backgroundColor: '#fff',
+              marginLeft: '10px'
+            }}
+          >
+            <SlUserFemale fontSize={15} />
+          </div>
+        </div>
+      )}
     </button>
   );
 }
