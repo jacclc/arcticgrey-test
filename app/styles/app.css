@@ -422,6 +422,10 @@ button.reset:hover:not(:has(> *)) {
   color: #f5bd41;
 }
 
+.review-logo {
+  height: 56px;
+}
+
 /*
 * --------------------------------------------------
 * routes/collections._index.tsx
