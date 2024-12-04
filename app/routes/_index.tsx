@@ -234,27 +234,23 @@ function ReviewsPanel() {
     <div className="reviews-panel">
       <div className="reviews-panel-header">
         <div className="review-header"> #1 Doctor Recommended</div>
-          <div style={{display: 'flex', alignItems: 'center'}}>
-            <div className="review-stars">
-              {[...Array(5)].map((_, idx) => (
-                <IoStar key={idx} />
-              ))}
-            </div>
-            <span>12,000+ 5-star Reviews</span>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <div className="review-stars">
+            {[...Array(5)].map((_, idx) => (
+              <IoStar key={idx} />
+            ))}
           </div>
+          <span>12,000+ 5-star Reviews</span>
         </div>
-      <div>
+      </div>
+      <div style={{display: 'flex'}}>
         {sponsoredReviews.map((review) => (
-          <img
-            className="review-logo"
-            src={review.url}
-            key={review.id}
-            alt="review"
-          />
+          <div key={review.id}>
+            <img className="review-logo" src={review.url} alt="review" />
+          </div>
         ))}
       </div>
     </div>
-
   );
 }
 
