@@ -9,6 +9,7 @@ import type {
 import {FaAsterisk} from 'react-icons/fa';
 import {useMeasure} from '@uidotdev/usehooks';
 import {motion, animate, useMotionValue} from 'motion/react';
+import {IoStar} from 'react-icons/io5';
 /*************  ✨ Codeium Command ⭐  *************/
 /**
  * Defines the meta information for the home page, setting the page title.
@@ -68,6 +69,7 @@ export default function Homepage() {
   return (
     <div className="home">
       <FeaturedCollection collection={data.featuredCollection} />
+      <ReviewsPanel />
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
   );
@@ -106,7 +108,6 @@ function FeaturedCollection({
       )}
       <div
         style={{
-          position: 'relative',
           zIndex: 1,
           display: 'grid',
         }}
@@ -200,6 +201,62 @@ const BannerAds = () => {
     </div>
   );
 };
+
+function ReviewsPanel() {
+  const sponsoredReviews = [
+    {
+      id: 1,
+      url: 'app/assets/bbc-news.png ',
+    },
+    {
+      id: 2,
+      url: '../assets/herb.png ',
+    },
+    {
+      id: 3,
+      url: '../assets/mens-journal.png ',
+    },
+    {
+      id: 4,
+      url: '../assets/nytimes.png ',
+    },
+    {
+      id: 5,
+      url: '../assets/Rolling-Stone.webp ',
+    },
+    {
+      id: 6,
+      url: '../assets/weekly.png ',
+    },
+  ];
+
+  return (
+    <div className="reviews-panel">
+      <div className="reviews-panel-header">
+        <div className="review-header"> #1 Doctor Recommended</div>
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <div className="review-stars">
+              {[...Array(5)].map((_, idx) => (
+                <IoStar key={idx} />
+              ))}
+            </div>
+            <span>12,000+ 5-star Reviews</span>
+          </div>
+        </div>
+      <div>
+        {sponsoredReviews.map((review) => (
+          <img
+            className="review-logo"
+            src={review.url}
+            key={review.id}
+            alt="review"
+          />
+        ))}
+      </div>
+    </div>
+
+  );
+}
 
 function RecommendedProducts({
   products,
