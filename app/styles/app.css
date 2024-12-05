@@ -395,6 +395,7 @@ button.reset:hover:not(:has(> *)) {
   margin-top: 4rem;
   padding: 1rem 2rem 1rem 2rem;
   display: flex;
+  flex-direction: row;
   background-color: #f6f6f5;
 }
 
@@ -404,7 +405,7 @@ button.reset:hover:not(:has(> *)) {
   .review-header {
     background-color: #dededd;
     padding: 0.5rem 0.4rem 0.5rem 0.4rem;
-    width: 95%;
+    width: 75%;
     text-align: center;
     border: 2px solid #000;
     border-radius: 8px;
@@ -422,8 +423,17 @@ button.reset:hover:not(:has(> *)) {
   color: #f5bd41;
 }
 
-.review-logo {
+.review-div-logo {
+  width: 100px;
   height: 56px;
+  background-color: #fff;
+  align-self: center;
+  align-content: center;
+}
+
+.review-logo {
+  height: 32px;
+  width: 65px;
 }
 
 /*

@@ -210,23 +210,23 @@ function ReviewsPanel() {
     },
     {
       id: 2,
-      url: '../assets/herb.png ',
+      url: 'app/assets/herb.png ',
     },
     {
       id: 3,
-      url: '../assets/mens-journal.png ',
+      url: 'app/assets/mens-journal.png ',
     },
     {
       id: 4,
-      url: '../assets/nytimes.png ',
+      url: 'app/assets/nytimes.png ',
     },
     {
       id: 5,
-      url: '../assets/Rolling-Stone.webp ',
+      url: 'app/assets/Rolling-Stone.webp ',
     },
     {
       id: 6,
-      url: '../assets/weekly.png ',
+      url: 'app/assets/weekly.png ',
     },
   ];
 
@@ -243,9 +243,15 @@ function ReviewsPanel() {
           <span>12,000+ 5-star Reviews</span>
         </div>
       </div>
-      <div style={{display: 'flex'}}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
         {sponsoredReviews.map((review) => (
-          <div key={review.id}>
+          <div className="review-div-logo" key={review.id}>
             <img className="review-logo" src={review.url} alt="review" />
           </div>
         ))}
