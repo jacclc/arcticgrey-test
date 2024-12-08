@@ -70,6 +70,7 @@ export default function Homepage() {
     <div className="home">
       <FeaturedCollection collection={data.featuredCollection} />
       <ReviewsPanel />
+      <Goals />
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
   );
@@ -261,6 +262,37 @@ function ReviewsPanel() {
             <img className="review-logo" src={review.url} alt="review" />
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function Goals() {
+  const goals = [
+    {
+      id: 1,
+      url: 'app/assets/goal1.png ',
+    },
+    {
+      id: 2,
+      url: 'app/assets/goal2.png ',
+    },
+    {
+      id: 3,
+      url: 'app/assets/goal3.png ',
+    },
+  ]
+  return (
+    <div className="col">
+      <div className="row">
+        <div className="col">
+          <h2>COMFORTABLY UNCOMFORTABLE</h2>
+          <h1>Start with your Goals</h1>
+          <p>We cannot become what we want to be by remaining what we are</p>
+        </div>
+      </div>
+      <div className="row">
+        
       </div>
     </div>
   );
