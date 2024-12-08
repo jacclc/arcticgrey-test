@@ -237,17 +237,23 @@ function ReviewsPanel() {
         <div style={{display: 'flex', alignItems: 'center'}}>
           <div className="review-stars">
             {[...Array(5)].map((_, idx) => (
-              <IoStar key={idx} />
+              <IoStar key={idx} style={{marginRight: '3px'}} />
             ))}
           </div>
-          <span>12,000+ 5-star Reviews</span>
+          <span
+            style={{
+              fontSize: '18px',
+              fontWeight: '600',
+              fontFamily: 'sans-serif',
+            }}
+          >
+            12,000+ 5-star Reviews
+          </span>
         </div>
       </div>
       <div
         style={{
           display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
         }}
       >
         {sponsoredReviews.map((review) => (

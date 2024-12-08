@@ -12,6 +12,16 @@ img {
   border-radius: 4px;
 }
 
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
 /*
 * --------------------------------------------------
 * components/Aside
@@ -209,7 +219,7 @@ button.reset:hover:not(:has(> *)) {
 * --------------------------------------------------
 */
 .footer {
-  background: var(--color-dark);
+  background: #f6f6f5;
   margin-top: auto;
 }
 
@@ -224,6 +234,52 @@ button.reset:hover:not(:has(> *)) {
   color: var(--color-light);
 }
 
+.footer-subscribe {
+  flex-basis: 31%;
+  padding: 5rem 0 5rem 3rem;
+}
+
+.footer-subscribe-button {
+  background: var(--color-dark);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  color: #fff;
+  height: 50px;
+  width: 143px;
+  font-weight: 600;
+}
+
+.footer-subscribe-input {
+  height: 50px;
+  border-radius: 0px;
+  background: #fff;
+  width: 15.5rem;
+  padding: 20px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border: solid 1px #dddddd;
+  color: #000;
+}
+
+.footer-subscribe-input::placeholder {
+  color: #000;
+}
+
+.footer-links {
+  flex-basis: 45%;
+  padding: 4rem 0 5rem 0;
+}
+
+.footer-contact-us {
+  flex-basis: 20%;
+  padding: 4rem 0 5rem 9rem;
+}
+
+.footer-copyright {
+    justify-content: space-between;
+    padding: 0.6rem 2rem 0.6rem 2rem;
+    border-top: 1px solid #dddddd;
+}
 /*
 * --------------------------------------------------
 * components/Cart
@@ -336,6 +392,10 @@ button.reset:hover:not(:has(> *)) {
 * routes/__index
 * --------------------------------------------------
 */
+.home {
+  overflow: hidden;
+}
+
 .featured-collection {
   display: block;
   margin-bottom: 2rem;
@@ -397,15 +457,21 @@ button.reset:hover:not(:has(> *)) {
   display: flex;
   flex-direction: row;
   background-color: #f6f6f5;
+  @media (max-width: 450px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .reviews-panel-header {
-  display: flex;
+  display: grid;
+  flex-basis: 30%;
 
   .review-header {
     background-color: #dededd;
     padding: 0.5rem 0.4rem 0.5rem 0.4rem;
-    width: 75%;
+    width: 210px;
     text-align: center;
     border: 2px solid #000;
     border-radius: 8px;
@@ -421,19 +487,23 @@ button.reset:hover:not(:has(> *)) {
 .review-stars {
   display: flex;
   color: #f5bd41;
+  margin-right: 10px;
 }
 
 .review-div-logo {
-  width: 100px;
-  height: 56px;
+  width: 115px;
+  height: 45px;
   background-color: #fff;
   align-self: center;
   align-content: center;
+  border-radius: 6px;
+  padding-left: 25px;
+  margin-left: 6px;
 }
 
 .review-logo {
-  height: 32px;
-  width: 65px;
+  height: 22px;
+  width: 35px;
 }
 
 /*
