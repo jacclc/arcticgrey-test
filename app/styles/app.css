@@ -386,6 +386,92 @@ button.reset:hover:not(:has(> *)) {
   align-items: center;
   gap: 1rem;
 }
+/*
+* --------------------------------------------------
+* components/Image
+* --------------------------------------------------
+*/
+.zoom-image-container {
+  overflow: hidden; 
+  border-radius: 7px;
+}
+
+.zoom-image {
+  transition: transform 0.3s ease-in-out;
+}
+
+.zoom-image.zoomed {
+  transform: scale(1.2);
+}
+
+.fadingEffect {
+  color: white;
+  font-size: 20px;
+  animation: arrowFadeIn 0.6s;
+}
+
+@keyframes arrowFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+.zoom-image-container {
+  position: relative;
+}
+
+.supplements-container {
+  background-color: #fff;
+}
+
+.supplements-arrow-box {
+  border: 1px solid #000;
+  height: 35px;
+  width: 35px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+}
+
+.supplements-arrow-box:hover {	
+  background-color: #000;
+  color: #fff;
+}
+
+.supplements-tag {
+  display: flex;
+  align-items: center;
+  background-color: #f6f6f5;
+  margin-right: 2px;
+  padding: 5px 10px 5px 10px;
+  gap: 4px;
+  border-radius: 4px;
+}
+
+.supplements-cost-tag {
+  padding: 5px 15px 5px 15px;
+  background-color: #000;
+  color: #fff;
+  border-radius: 4px;
+}
+
+.supplements-payment-options {
+  background-color: #F6F6F5;
+  border-radius: 4px;
+}
+
+.supplements-add-to-cart {
+  width: 325px;
+  height: 45px;
+  color: #fff;
+  background-color: #1B1F23;
+  border-radius: 8px;
+}
 
 /*
 * --------------------------------------------------
@@ -504,6 +590,27 @@ button.reset:hover:not(:has(> *)) {
 .review-logo {
   height: 22px;
   width: 35px;
+}
+
+.goals-header {
+
+}
+
+.goals-display {
+
+}
+
+.goals-arrow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 34px;
+  width: 34px;
+  border: 1px solid #000;
+  border-radius: 26px;
+  text-align: -webkit-center;
+  align-content: center;
+
 }
 
 /*

@@ -330,17 +330,6 @@ export function Footer({
             </div>
           </div>
         </footer>
-        {/* {(footer) => (
-          <footer className="footer">
-            {footer?.menu && header.shop.primaryDomain?.url && (
-              <FooterMenu
-                menu={footer.menu}
-                primaryDomainUrl={header.shop.primaryDomain.url}
-                publicStoreDomain={publicStoreDomain}
-              />
-            )}
-          </footer>
-        )} */}
       </Await>
     </Suspense>
   );

@@ -1,15 +1,19 @@
 import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link, type MetaFunction} from '@remix-run/react';
-import {Suspense, useEffect} from 'react';
+import {Suspense, useEffect, useMemo, useRef, useState} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
-import {FaAsterisk} from 'react-icons/fa';
+import {FaAsterisk, FaRegStar} from 'react-icons/fa';
 import {useMeasure} from '@uidotdev/usehooks';
 import {motion, animate, useMotionValue} from 'motion/react';
-import {IoStar} from 'react-icons/io5';
+import {IoStar, IoEllipse} from 'react-icons/io5';
+import {TfiArrowTopRight, TfiArrowRight, TfiArrowLeft} from 'react-icons/tfi';
+import {FaStar, FaRegStarHalfStroke} from 'react-icons/fa6';
+import { p } from 'motion/react-client';
+
 /*************  ✨ Codeium Command ⭐  *************/
 /**
  * Defines the meta information for the home page, setting the page title.
@@ -19,7 +23,6 @@ import {IoStar} from 'react-icons/io5';
   () => {
     return [{title: 'Hydrogen | Home'}];
   };
-
 export async function loader(args: LoaderFunctionArgs) {
   // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);
@@ -70,7 +73,8 @@ export default function Homepage() {
     <div className="home">
       <FeaturedCollection collection={data.featuredCollection} />
       <ReviewsPanel />
-      <Goals />
+      <Goals goalsData={data.recommendedProducts} />
+      <Supplements Supplements={data.recommendedProducts} />
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
   );
@@ -163,7 +167,7 @@ const BannerAds = () => {
     const controls = animate(xTranslation, [0, finalPosition], {
       ease: 'linear',
       repeat: Infinity,
-      duration: 50,
+      duration: 100,
       repeatType: 'loop',
       repeatDelay: 0,
     });
@@ -267,36 +271,532 @@ function ReviewsPanel() {
   );
 }
 
-function Goals() {
+function Goals({
+  goalsData,
+}: {
+  goalsData: Promise<RecommendedProductsQuery | null>;
+}) {
   const goals = [
     {
       id: 1,
+      name: 'Sleep',
+      description: 'Optimize your sleep patterns.',
+      image: 'app/assets/GreenWomenscrew01.webp',
       url: 'app/assets/goal1.png ',
     },
     {
       id: 2,
-      url: 'app/assets/goal2.png ',
+      name: 'Cognitive Function',
+      description: "Enhance your brain's performance and connectivity",
+      image: 'app/assets/GreenWomenscrew01.webp',
+      url: 'app/assets/goal1.png ',
     },
     {
       id: 3,
-      url: 'app/assets/goal3.png ',
+      name: 'Foundational Health',
+      description: 'Promoting healthy, natural deep sleep day to day',
+      image: 'app/assets/GreenWomenscrew01.webp',
+      url: 'app/assets/goal1.png ',
     },
-  ]
+    {
+      id: 4,
+      name: 'Athletic Performance',
+      description: 'Increase your healthy tissue, muscle, and energy',
+      image: 'app/assets/GreenWomenscrew01.webp',
+      url: 'app/assets/goal1.png ',
+    },
+    {
+      id: 5,
+      name: 'Hormone Support',
+      description: 'Boost your mood, libido, and vitality',
+      image: 'app/assets/GreenWomenscrew01.webp',
+      url: 'app/assets/GreenWomenscrew01.webp',
+    },
+  ];
+
+  const [zoomedGoalId, setZoomedGoalId] = useState<number | null>(null);
+  const [hoverArrowGoalId, sethoverArrowGoalId] = useState<number | null>(null);
+
   return (
-    <div className="col">
-      <div className="row">
-        <div className="col">
-          <h2>COMFORTABLY UNCOMFORTABLE</h2>
-          <h1>Start with your Goals</h1>
-          <p>We cannot become what we want to be by remaining what we are</p>
+    <div className="col" style={{paddingBottom: '3rem'}}>
+      <div
+        className="row"
+        style={{justifyContent: 'center', padding: '4rem 0 2rem 0'}}
+      >
+        <div className="col" style={{textAlign: 'center'}}>
+          <span style={{fontSize: '16px', fontWeight: '600'}}>
+            COMFORTABLY UNCOMFORTABLE
+          </span>
+          <span style={{fontSize: '41px', fontWeight: 'bold'}}>
+            Start with your Goals
+          </span>
+          <span
+            style={{
+              color: '#606365',
+              width: '65%',
+              fontWeight: '600',
+              alignSelf: 'center',
+            }}
+          >
+            We cannot become what we want to be by remaining what we are
+          </span>
         </div>
       </div>
-      <div className="row">
-        
+      <div
+        className="row"
+        style={{
+          justifyContent: 'space-around',
+          marginRight: '2rem',
+          marginLeft: '2rem',
+        }}
+      >
+        <Suspense fallback={<div>Loading...</div>}>
+          <Await resolve={goalsData}>
+            {[...goals].map((goal) => (
+              <div
+                onMouseEnter={() => setZoomedGoalId(goal.id)}
+                onMouseLeave={() => setZoomedGoalId(null)}
+                className="col"
+                key={goal.id}
+              >
+                <div
+                  className={`zoom-image-container ${
+                    zoomedGoalId === goal.id ? 'zoomed' : ''
+                  }`}
+                >
+                  <img
+                    src={goal.image}
+                    alt="goal"
+                    style={{
+                      width: '350px',
+                      height: '440px',
+                      transform:
+                        zoomedGoalId === goal.id ? 'scale(1.2)' : 'scale(1.15)',
+                      transition: 'transform 0.3s ease-in-out',
+                    }}
+                    className={`zoom-image ${
+                      zoomedGoalId === goal.id ? 'zoomed' : ''
+                    }`}
+                  />
+                </div>
+                <div style={{position: 'relative', marginTop: '1rem'}}>
+                  <h3
+                    style={{
+                      fontSize: '18px',
+                      fontWeight: '700',
+                      fontFamily: 'sans-serif',
+                    }}
+                  >
+                    {goal.name}
+                  </h3>
+                  <p style={{width: '230px'}}>{goal.description}</p>
+                  <div
+                    className="goals-arrow"
+                    onMouseEnter={() => sethoverArrowGoalId(goal.id)}
+                    onMouseLeave={() => sethoverArrowGoalId(null)}
+                    style={{
+                      transition: 'transform 0.3s ease-in-out',
+                      backgroundColor:
+                        hoverArrowGoalId === goal.id ? '#000' : '',
+                      transform:
+                        zoomedGoalId === goal.id && hoverArrowGoalId !== goal.id ? 'rotate(45deg)' : '',
+                    }}
+                  >
+                    {hoverArrowGoalId != goal.id && (
+                      <TfiArrowTopRight style={{fontSize: '20px'}} />
+                    )}
+                    {hoverArrowGoalId === goal.id && (
+                      <TfiArrowRight
+                        className="fadingEffect"
+                        style={{
+                          fontSize: '20px',
+                          color: '#fff',
+                        }}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </Await>
+        </Suspense>
       </div>
     </div>
   );
 }
+
+function Supplements({
+  Supplements,
+}: {
+  Supplements: Promise<RecommendedProductsQuery | null>;
+}) {
+
+  const [supplementsInfo, setSupplementsInfo] = useState(() => {
+    const initialSupplementsInfo = [
+      {
+        id: 1,
+        name: 'Omega-3',
+        description: 'Supports cognitive function',
+        image: 'app/assets/GreenWomenscrew01.webp',
+        reviews: 5.0,
+        cost: 49.95,
+        url: 'app/assets/goal1.png ',
+        bestSeller: true,
+        tags: [
+          {
+            id: 1,
+            name: 'GMO Free',
+          },
+          {
+            id: 2,
+            name: 'Gluten Free',
+          },
+          {
+            id: 3,
+            name: 'Vegan',
+          },
+          {
+            id: 4,
+            name: 'Dairy Free',
+          },
+        ],
+      },
+      {
+        id: 2,
+        name: 'Magnesium L-Threonate',
+        description: 'Enhances the quality of sleep.',
+        image: 'app/assets/GreenWomenscrew01.webp',
+        reviews: 5.0,
+        cost: 49.95,
+        url: 'app/assets/goal1.png ',
+        bestSeller: false,
+        tags: [
+          {
+            id: 1,
+            name: 'GMO Free',
+          },
+          {
+            id: 2,
+            name: 'Gluten Free',
+          },
+        ],
+      },
+      {
+        id: 3,
+        name: 'Grass Fed Whey Protein Isolate Powder',
+        description: 'Supports muscle mass and strength',
+        image: 'app/assets/GreenWomenscrew01.webp',
+        reviews: 5.0,
+        cost: 49.95,
+        url: 'app/assets/goal1.png ',
+        bestSeller: false,
+        tags: [
+          {
+            id: 1,
+            name: 'GMO Free',
+          },
+          {
+            id: 3,
+            name: 'Vegan',
+          },
+          {
+            id: 4,
+            name: 'Dairy Free',
+          },
+        ],
+      },
+      {
+        id: 4,
+        name: 'Complete Sleep Bundle',
+        description: 'Deepens sleep cycles for rejuvenated mornings',
+        image: 'app/assets/GreenWomenscrew01.webp',
+        reviews: 5.0,
+        cost: 49.95,
+        url: 'app/assets/goal1.png ',
+        bestSeller: true,
+        tags: [
+          {
+            id: 2,
+            name: 'Gluten Free',
+          },
+          {
+            id: 3,
+            name: 'Vegan',
+          },
+          {
+            id: 4,
+            name: 'Dairy Free',
+          },
+        ],
+      },
+    ]; // populate the array here
+    const nwwArray = initialSupplementsInfo.map((supplement) => {
+      return {...supplement, paymentOption: 'subscribe'};
+    });
+    console.log(nwwArray);
+    return nwwArray;
+  });
+
+  const [zoomedSupplementId, setZoomedSupplementId] = useState<number | null>(
+    null,
+  );
+
+  const [oneTimePurchaseId, setOneTimePurchaseId] = useState<number | null>(
+    null,
+  );
+  const [subscribeAndSaveId, setSubscribeAndSaveId] = useState<number | null>(
+    null,
+  );
+  // const [shoppingList, setShoppingList] = useState([]);
+
+  const handleRadioChange = (
+    supplement: any,
+    supplementId: number,
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+   
+  };
+
+  return (
+    <div className="col" style={{backgroundColor: '#60636'}}>
+      <div
+        className="row"
+        style={{justifyContent: 'center', padding: '4rem 0 2rem 0'}}
+      >
+        <div className="col" style={{textAlign: 'center'}}>
+          <span style={{fontSize: '16px', fontWeight: '600'}}>🌟 Trending</span>
+          <div className="row">
+            <div className="col supplements-arrow-box">
+              <TfiArrowLeft
+                style={{
+                  fontSize: '14px',
+                }}
+              />
+            </div>
+            <span
+              style={{
+                fontSize: '41px',
+                fontWeight: 'bold',
+                marginLeft: '3.5rem',
+                marginRight: '3.5rem',
+              }}
+            >
+              Supplements
+            </span>
+            <div className="col supplements-arrow-box">
+              <TfiArrowRight
+                style={{
+                  fontSize: '14px',
+                }}
+              />
+            </div>
+          </div>
+          <span
+            style={{
+              color: '#606365',
+              width: '65%',
+              fontWeight: '600',
+              alignSelf: 'center',
+              textDecoration: 'underline',
+            }}
+          >
+            View All
+          </span>
+        </div>
+      </div>
+      <div
+        className="row"
+        style={{
+          justifyContent: 'space-around',
+          marginRight: '2rem',
+          marginLeft: '2rem',
+        }}
+      >
+        <Suspense fallback={<div>Loading...</div>}>
+          <Await resolve={Supplements}>
+            {[...supplementsInfo].map((supplement) => (
+              <div
+                onMouseEnter={() => setZoomedSupplementId(supplement.id)}
+                onMouseLeave={() => setZoomedSupplementId(null)}
+                className="col supplements-container"
+                key={supplement.id}
+              >
+                <div
+                  className={`zoom-image-container ${
+                    zoomedSupplementId === supplement.id ? 'zoomed' : ''
+                  }`}
+                >
+                  {supplement.bestSeller && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '10px',
+                        left: '10px',
+                        padding: '6px 10px 6px 10px',
+                        backgroundColor: '#ffed92',
+                        zIndex: 1,
+                      }}
+                    >
+                      <span>Bestseller</span>
+                    </div>
+                  )}
+                  <img
+                    src={supplement.image}
+                    alt="goal"
+                    style={{
+                      width: '350px',
+                      height: '440px',
+                      transform:
+                        zoomedSupplementId === supplement.id
+                          ? 'scale(1.2)'
+                          : 'scale(1.15)',
+                      transition: 'transform 0.3s ease-in-out',
+                    }}
+                    className={`zoom-image ${
+                      zoomedSupplementId === supplement.id ? 'zoomed' : ''
+                    }`}
+                  />
+                </div>
+                <div className="row">
+                  {supplement.tags.map((tag) => (
+                    <div className="supplements-tag" key={tag.id}>
+                      <IoEllipse />
+                      <span>{tag.name}</span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{position: 'relative', marginTop: '1rem'}}>
+                  <h3
+                    style={{
+                      fontSize: '18px',
+                      fontWeight: '700',
+                      fontFamily: 'sans-serif',
+                    }}
+                  >
+                    {supplement.name}
+                  </h3>
+                  <p style={{fontSize: '14px'}}>{supplement.description}</p>
+                  <div
+                    className="row"
+                    style={{marginTop: '1rem', justifyContent: 'space-between'}}
+                  >
+                    <div className="col">
+                      {!!supplement.reviews && (
+                        <ReviewsStars rating={supplement.reviews} />
+                      )}
+                    </div>
+                    <div className="col">
+                      <div className="row supplements-cost-tag">
+                        Add • ${supplement.cost}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* {zoomedSupplementId === supplement.id && ( */}
+                <div className="col" style={{textAlign: 'center'}}>
+                  <div className="row">
+                    <div className="row">
+                      <div className="col">
+                        <div className="row supplements-payment-options ">
+                          <div className="col">
+                            <input
+                              id={'radioOneTime' + supplement.id}
+                              type="radio"
+                              name={'payment-option-' + supplement.id}
+                              value={'oneTime'}
+                              checked={supplement.paymentOption === 'oneTime'}
+                              onChange={(event) =>
+                                handleRadioChange(
+                                  supplement,
+                                  supplement.id,
+                                  event,
+                                )
+                              }
+                            />
+                          </div>
+                          <div className="col">
+                            <span>One-Time Purchase</span>
+                            <span>${supplement.cost}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="row supplements-payment-options ">
+                          <div className="col">
+                            <input
+                              id={'radioSubscribe' + supplement.id}
+                              type="radio"
+                              name={'payment-option-' + supplement.id}
+                              value="subscribe"
+                              checked={supplement.paymentOption === 'subscribe'}
+                              onChange={(event) =>
+                                handleRadioChange(
+                                  supplement,
+                                  supplement.id,
+                                  event,
+                                )
+                              }
+                              style={{
+                                border: subscribeAndSaveId
+                                  ? '1px solid #1B1F23'
+                                  : 'none',
+                              }}
+                            />
+                          </div>
+                          <div className="col">
+                            <span>Subscribe & Save</span>
+                            <div className="row">
+                              <span>
+                                $
+                                {(
+                                  -(supplement.cost * 0.15) + supplement.cost
+                                ).toFixed(2)}
+                              </span>
+                              <span>Save 10%</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <button className="supplements-add-to-cart">
+                      Add to Card - ${supplement.cost}
+                    </button>
+                  </div>
+                  <div
+                    className="row"
+                    style={{color: '#1B1F23', fontSize: '12px'}}
+                  >
+                    View Full Details
+                  </div>
+                </div>
+                {/* )} */}
+              </div>
+            ))}
+          </Await>
+        </Suspense>
+      </div>
+    </div>
+  );
+}
+
+const ReviewsStars = ({rating}: {rating: number}) => {
+  const stars = Math.floor(rating);
+  const halfStar = rating - stars >= 0.5;
+
+  return (
+    <div className="reviews-stars row">
+      {[...Array(stars)].map((_, index) => (
+        <FaStar key={index} />
+      ))}
+      {halfStar && <FaRegStarHalfStroke />}
+      {[...Array(5 - stars - (halfStar ? 1 : 0))].map((_, index) => (
+        <FaRegStar key={index} />
+      ))}
+    </div>
+  );
+};
 
 function RecommendedProducts({
   products,
