@@ -423,6 +423,7 @@ button.reset:hover:not(:has(> *)) {
 
 .zoom-image-container {
   position: relative;
+  align-self: center;
 }
 
 .supplements-container {
@@ -466,11 +467,77 @@ button.reset:hover:not(:has(> *)) {
 }
 
 .supplements-add-to-cart {
-  width: 325px;
+  width: 90%;
   height: 45px;
   color: #fff;
   background-color: #1B1F23;
   border-radius: 8px;
+}
+
+.container {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.supplements-payment-options {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  transition: 0.5s;
+  transform: translateY(180%);
+}
+
+.supplements-container:hover .supplements-payment-options{
+  transform: translateY(0);
+}
+
+.supplements-details {
+  position: relative;
+  margin-top: 1rem;
+  transform-origin: bottom;
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.supplements-container:hover .supplements-details{
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.fade {
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.supplements-container:hover .fade {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.supplements-container:not(:hover) .fade {
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.supplements-objective-icon {
+  width: 50px;
+  height: 50px;
+  background-color: #000;
+  border-radius: 50%;
+  color: #fff;
+  align-content: center;
+  padding-left: 3%;
+  margin-bottom: 1rem;
+  font-size: 24px;
+}
+
+.radio-button {
+
 }
 
 /*

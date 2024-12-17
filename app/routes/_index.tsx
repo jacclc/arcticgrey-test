@@ -1,6 +1,6 @@
 import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link, type MetaFunction} from '@remix-run/react';
-import {Suspense, useEffect, useMemo, useRef, useState} from 'react';
+import {createRef, Suspense, useEffect, useMemo, useRef, useState} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
@@ -12,7 +12,11 @@ import {motion, animate, useMotionValue} from 'motion/react';
 import {IoStar, IoEllipse} from 'react-icons/io5';
 import {TfiArrowTopRight, TfiArrowRight, TfiArrowLeft} from 'react-icons/tfi';
 import {FaStar, FaRegStarHalfStroke} from 'react-icons/fa6';
-import { p } from 'motion/react-client';
+import {p} from 'motion/react-client';
+import {AiOutlineLike} from 'react-icons/ai';
+import {PiPottedPlantBold} from 'react-icons/pi';
+import {HiOutlineChatBubbleLeftRight} from 'react-icons/hi2';
+import {TbCheckupList} from 'react-icons/tb';
 
 /*************  ✨ Codeium Command ⭐  *************/
 /**
@@ -75,6 +79,7 @@ export default function Homepage() {
       <ReviewsPanel />
       <Goals goalsData={data.recommendedProducts} />
       <Supplements Supplements={data.recommendedProducts} />
+      <CleanSupplements />
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
   );
@@ -399,7 +404,9 @@ function Goals({
                       backgroundColor:
                         hoverArrowGoalId === goal.id ? '#000' : '',
                       transform:
-                        zoomedGoalId === goal.id && hoverArrowGoalId !== goal.id ? 'rotate(45deg)' : '',
+                        zoomedGoalId === goal.id && hoverArrowGoalId !== goal.id
+                          ? 'rotate(45deg)'
+                          : '',
                     }}
                   >
                     {hoverArrowGoalId != goal.id && (
@@ -430,14 +437,13 @@ function Supplements({
 }: {
   Supplements: Promise<RecommendedProductsQuery | null>;
 }) {
-
   const [supplementsInfo, setSupplementsInfo] = useState(() => {
     const initialSupplementsInfo = [
       {
         id: 1,
         name: 'Omega-3',
         description: 'Supports cognitive function',
-        image: 'app/assets/GreenWomenscrew01.webp',
+        image: 'app/assets/Omega-3.png',
         reviews: 5.0,
         cost: 49.95,
         url: 'app/assets/goal1.png ',
@@ -465,10 +471,10 @@ function Supplements({
         id: 2,
         name: 'Magnesium L-Threonate',
         description: 'Enhances the quality of sleep.',
-        image: 'app/assets/GreenWomenscrew01.webp',
+        image: 'app/assets/Omega-3.png',
         reviews: 5.0,
         cost: 49.95,
-        url: 'app/assets/goal1.png ',
+        url: 'app/assets/Omega-3.png ',
         bestSeller: false,
         tags: [
           {
@@ -485,10 +491,10 @@ function Supplements({
         id: 3,
         name: 'Grass Fed Whey Protein Isolate Powder',
         description: 'Supports muscle mass and strength',
-        image: 'app/assets/GreenWomenscrew01.webp',
+        image: 'app/assets/Omega-3.png',
         reviews: 5.0,
         cost: 49.95,
-        url: 'app/assets/goal1.png ',
+        url: 'app/assets/Omega-3.png ',
         bestSeller: false,
         tags: [
           {
@@ -509,10 +515,10 @@ function Supplements({
         id: 4,
         name: 'Complete Sleep Bundle',
         description: 'Deepens sleep cycles for rejuvenated mornings',
-        image: 'app/assets/GreenWomenscrew01.webp',
+        image: 'app/assets/Omega-3.png',
         reviews: 5.0,
         cost: 49.95,
-        url: 'app/assets/goal1.png ',
+        url: 'app/assets/Omega-3.png ',
         bestSeller: true,
         tags: [
           {
@@ -541,27 +547,36 @@ function Supplements({
     null,
   );
 
-  const [oneTimePurchaseId, setOneTimePurchaseId] = useState<number | null>(
-    null,
-  );
-  const [subscribeAndSaveId, setSubscribeAndSaveId] = useState<number | null>(
-    null,
-  );
-  // const [shoppingList, setShoppingList] = useState([]);
+  const radioButtonRef = createRef<HTMLInputElement>();
+
+  const [shoppingList, setShoppingList] = useState([]);
+
+  const handleAddToCart = (supplement: any) => {
+    // setShoppingList([...shoppingList, supplement]);
+  };
 
   const handleRadioChange = (
-    supplement: any,
     supplementId: number,
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-   
+    const value = event.target.value;
+    const supplements = supplementsInfo.map((supplement) => {
+      return supplement.id === supplementId
+        ? {...supplement, paymentOption: value}
+        : supplement;
+    });
+    setSupplementsInfo(supplements);
   };
 
   return (
     <div className="col" style={{backgroundColor: '#60636'}}>
       <div
         className="row"
-        style={{justifyContent: 'center', padding: '4rem 0 2rem 0'}}
+        style={{
+          justifyContent: 'center',
+          padding: '4rem 0 2rem 0',
+          backgroundColor: '#f6f6f5',
+        }}
       >
         <div className="col" style={{textAlign: 'center'}}>
           <span style={{fontSize: '16px', fontWeight: '600'}}>🌟 Trending</span>
@@ -608,8 +623,8 @@ function Supplements({
         className="row"
         style={{
           justifyContent: 'space-around',
-          marginRight: '2rem',
-          marginLeft: '2rem',
+          backgroundColor: '#f6f6f5',
+          padding: '4rem 0.3rem',
         }}
       >
         <Suspense fallback={<div>Loading...</div>}>
@@ -657,60 +672,97 @@ function Supplements({
                     }`}
                   />
                 </div>
-                <div className="row">
-                  {supplement.tags.map((tag) => (
-                    <div className="supplements-tag" key={tag.id}>
-                      <IoEllipse />
-                      <span>{tag.name}</span>
+                <div className="container">
+                  <div className={`col supplements-details`}>
+                    <div className="row">
+                      {supplement.tags.map((tag) => (
+                        <div className="supplements-tag" key={tag.id}>
+                          <IoEllipse />
+                          <span>{tag.name}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-                <div style={{position: 'relative', marginTop: '1rem'}}>
-                  <h3
-                    style={{
-                      fontSize: '18px',
-                      fontWeight: '700',
-                      fontFamily: 'sans-serif',
-                    }}
-                  >
-                    {supplement.name}
-                  </h3>
-                  <p style={{fontSize: '14px'}}>{supplement.description}</p>
-                  <div
-                    className="row"
-                    style={{marginTop: '1rem', justifyContent: 'space-between'}}
-                  >
-                    <div className="col">
-                      {!!supplement.reviews && (
-                        <ReviewsStars rating={supplement.reviews} />
-                      )}
-                    </div>
-                    <div className="col">
-                      <div className="row supplements-cost-tag">
-                        Add • ${supplement.cost}
+                    <h3
+                      style={{
+                        fontSize: '18px',
+                        fontWeight: '700',
+                        fontFamily: 'sans-serif',
+                      }}
+                    >
+                      {supplement.name}
+                    </h3>
+                    <p style={{fontSize: '14px'}}>{supplement.description}</p>
+                    <div
+                      className="row"
+                      style={{
+                        marginTop: '1rem',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <div className="col">
+                        {!!supplement.reviews && (
+                          <ReviewsStars rating={supplement.reviews} />
+                        )}
+                      </div>
+                      <div className="col">
+                        <div className="row supplements-cost-tag">
+                          Add • ${supplement.cost}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                {/* {zoomedSupplementId === supplement.id && ( */}
-                <div className="col" style={{textAlign: 'center'}}>
-                  <div className="row">
-                    <div className="row">
+                  <div
+                    className={`col supplements-payment-options ${
+                      zoomedSupplementId === supplement.id
+                        ? 'container-hover'
+                        : ''
+                    }`}
+                  >
+                    <div
+                      className="row"
+                      style={{width: '85%', justifyContent: 'space-between'}}
+                    >
                       <div className="col">
-                        <div className="row supplements-payment-options ">
+                        <div
+                          className="row "
+                          role="button"
+                          tabIndex={0}
+                          style={{
+                            border:
+                              supplement.paymentOption === 'oneTime'
+                                ? '1px solid #1B1F23'
+                                : 'none',
+                          }}
+                          onClick={() => {
+                            const radioButton = document.getElementById(
+                              `radioOneTime${supplement.id}`,
+                            );
+                            console.log(radioButton);
+                            if (radioButton) {
+                              radioButton.click();
+                            }
+                          }}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                              const radioButton = document.getElementById(
+                                `radioOneTime${supplement.id}`,
+                              );
+                              if (radioButton) {
+                                radioButton.click();
+                              }
+                            }
+                          }}
+                        >
                           <div className="col">
                             <input
+                              className="radio-button"
                               id={'radioOneTime' + supplement.id}
                               type="radio"
                               name={'payment-option-' + supplement.id}
                               value={'oneTime'}
                               checked={supplement.paymentOption === 'oneTime'}
                               onChange={(event) =>
-                                handleRadioChange(
-                                  supplement,
-                                  supplement.id,
-                                  event,
-                                )
+                                handleRadioChange(supplement.id, event)
                               }
                             />
                           </div>
@@ -721,7 +773,35 @@ function Supplements({
                         </div>
                       </div>
                       <div className="col">
-                        <div className="row supplements-payment-options ">
+                        <div
+                          className="row"
+                          role="button"
+                          tabIndex={0}
+                          style={{
+                            border:
+                              supplement.paymentOption === 'subscribe'
+                                ? '1px solid #1B1F23'
+                                : 'none',
+                          }}
+                          onClick={() => {
+                            const radioButton = document.getElementById(
+                              `radioSubscribe${supplement.id}`,
+                            );
+                            if (radioButton) {
+                              radioButton.click();
+                            }
+                          }}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                              const radioButton = document.getElementById(
+                                `radioSubscribe${supplement.id}`,
+                              );
+                              if (radioButton) {
+                                radioButton.click();
+                              }
+                            }
+                          }}
+                        >
                           <div className="col">
                             <input
                               id={'radioSubscribe' + supplement.id}
@@ -730,17 +810,8 @@ function Supplements({
                               value="subscribe"
                               checked={supplement.paymentOption === 'subscribe'}
                               onChange={(event) =>
-                                handleRadioChange(
-                                  supplement,
-                                  supplement.id,
-                                  event,
-                                )
+                                handleRadioChange(supplement.id, event)
                               }
-                              style={{
-                                border: subscribeAndSaveId
-                                  ? '1px solid #1B1F23'
-                                  : 'none',
-                              }}
                             />
                           </div>
                           <div className="col">
@@ -758,20 +829,22 @@ function Supplements({
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="row">
-                    <button className="supplements-add-to-cart">
-                      Add to Card - ${supplement.cost}
-                    </button>
+                    <div className="row" style={{width: '100%'}}>
+                      <button
+                        className="supplements-add-to-cart"
+                        onClick={() => handleAddToCart(supplement)}
+                      >
+                        Add to Card - ${supplement.cost}
+                      </button>
+                    </div>
                   </div>
                   <div
-                    className="row"
+                    className="row fade "
                     style={{color: '#1B1F23', fontSize: '12px'}}
                   >
                     View Full Details
                   </div>
                 </div>
-                {/* )} */}
               </div>
             ))}
           </Await>
@@ -797,6 +870,86 @@ const ReviewsStars = ({rating}: {rating: number}) => {
     </div>
   );
 };
+
+function CleanSupplements() {
+  const supplementsObjectives = [
+    {
+      id: 1,
+      title: 'We Make It Easy',
+      description:
+        'Personalized Solutions & Guidance Mean You Get Just What You Need Nothing More.',
+      icon: <AiOutlineLike />,
+    },
+    {
+      id: 2,
+      title: 'Clean & Effective',
+      description:
+        'Proven Ingredients, not Artificial, Crafted By Experts For Optimal Effectiveness.',
+      icon: <PiPottedPlantBold />,
+    },
+    {
+      id: 3,
+      title: 'Your Free Dietitian',
+      description:
+        'Every Gainful Subscribe Gets Free, 1:1 Access Their Own Registered Dietitian.',
+      icon: <HiOutlineChatBubbleLeftRight />,
+    },
+    {
+      id: 4,
+      title: 'Made For You',
+      description:
+        'Performance is Persona, Personalized & Customizable Products For Your Needs, Body & Goals.',
+      icon: <TbCheckupList />,
+    },
+  ];
+  return (
+    <div
+      className="col"
+      style={{
+        width: '100%',
+        backgroundColor: '#fff',
+        padding: '4rem 3rem',
+      }}
+    >
+      <h4 style={{fontSize: '1rem'}}>🧐 Why Health & Fitness</h4>
+      <h2 style={{fontSize: '2.5rem', width: '27%'}}>
+        Clean Supplements - Made For You
+      </h2>
+      <div className="row" style={{justifyContent: 'space-between'}}>
+        {[...supplementsObjectives].map((supplement) => (
+          <div
+            className="col"
+            style={{
+              flexBasis: '25%',
+            }}
+            key={supplement.id}
+          >
+            <div className="row">
+              <div className="supplements-objective-icon">
+                {supplement.icon}
+              </div>
+            </div>
+            <div className="row" style={{marginBottom: '1rem'}}>
+              <h3
+                style={{
+                  fontWeight: '500',
+                  fontSize: '18px',
+                  fontFamily: 'Rubik',
+                  color: '#1B1F23',
+                }}
+              >
+                {supplement.title}
+              </h3>
+            </div>
+            <div className="row">
+              <p style={{width: '80%'}}>{supplement.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function RecommendedProducts({
   products,
